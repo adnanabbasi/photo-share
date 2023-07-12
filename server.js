@@ -2,6 +2,7 @@ const express = require('express')
 const app = new express()
 const db = require('./models')
 const bodyParser = require('body-parser')
+const logger = require('morgan')
 const expressSession = require('express-session')
 
 app.use(expressSession({ secret: 'Drew Loves Kinsta' }))
@@ -13,6 +14,7 @@ app.use('*', (request, response, next) => {
 })
 
 app.use(bodyParser.json())
+app.use(logger("dev"))
 app.use(express.static('public'))
 app.set('view engine', 'ejs')
 
@@ -28,7 +30,7 @@ app.use('/', PageRouter)
 //db
 const sqlPort = 3307 // 3306 or 3307
 db.sequelize
-  .sync({ force: true })
+  .sync()
   .then(() => {
     app.listen(sqlPort, () => {
       console.log(`Mariadb Connection Successful - http://localhost:${sqlPort}.`)
