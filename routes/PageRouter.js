@@ -6,7 +6,9 @@ const db = require('../models')
 PageRouter.get('/', (request, response) => {
   console.log(request.session.userId)
   if (request.session.userId) {
-    response.render('index')
+    db.photo.findAll().then(photos => {
+      response.render('index', {data: photos})
+    })
   } else {
     response.redirect('/login')
   }
